@@ -1,0 +1,18 @@
+# Canonical CI/CD config for hanzoai/cookie-parser — read by the hanzoai/ci
+# reusable workflow (.hanzo/workflows/cicd.yml) and by platform.hanzo.ai.
+#
+# LIBRARY: Express cookie-parsing middleware. No image, no deploy — it ships
+# from a tag.
+#
+# The gate is the mocha suite. The part that has to be tested is the SIGNED
+# cookie path: this middleware decides whether `s:value.signature` verifies
+# against the app's secret, supports secret rotation via an array, and must
+# leave the cookie in `req.cookies` rather than `req.signedCookies` when the
+# signature does not check out. Getting that backwards is silent — the request
+# still works, it is just trusting an attacker-supplied value — and only the
+# suite can tell the two apart.
+#
+# `npm install`, not `npm ci`: this repo ships no package-lock.json.
+test:
+  - name: test
+    run: npm install && npm test
